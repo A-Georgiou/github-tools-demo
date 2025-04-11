@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Interactive Chart</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .chart { background: #f5f5f5; padding: 20px; border-radius: 5px; }
+    .bar { height: 30px; margin: 5px 0; background: linear-gradient(to right, #3498db, #2980b9); transition: width 0.5s; }
+    input { width: 50px; }
+  </style>
+</head>
+<body>
+  <h1>Interactive Chart</h1>
+  <div class="controls">
+    <div>
+      Data 1: <input type="number" id="data1" value="65" min="0" max="100">
+      <div class="chart">
+        <div class="bar" id="bar1" style="width: 65%;"></div>
+      </div>
+    </div>
+    <div>
+      Data 2: <input type="number" id="data2" value="40" min="0" max="100">
+      <div class="chart">
+        <div class="bar" id="bar2" style="width: 40%;"></div>
+      </div>
+    </div>
+    <div>
+      Data 3: <input type="number" id="data3" value="80" min="0" max="100">
+      <div class="chart">
+        <div class="bar" id="bar3" style="width: 80%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('input', function() {
+        const id = this.id;
+        const value = this.value;
+        document.getElementById('bar' + id.slice(-1)).style.width = value + '%';
+      });
+    });
+  </script>
+</body>
+</html>
