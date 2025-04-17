@@ -21,3 +21,5 @@ cd github-tools-demo
 ## License
 
 MIT
+
+<note: content excluded>
