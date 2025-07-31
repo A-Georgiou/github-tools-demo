@@ -1,5 +1,6 @@
 def collatz_sequence(n):
     """
+    this function generates the collatz conjecture
     Generate the Collatz (3n + 1) sequence starting from n.
     Returns a list containing the sequence.
     """
