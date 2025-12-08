@@ -30,11 +30,11 @@ github-tools-demo/
 
 ### 1. README.md
 - **Type:** Documentation
-- **Content:** Minimal README with placeholder text
+- **Content:** Minimal README with incomplete/placeholder text
 - **Status:** Needs expansion
 - **Current Content:** 
-  - "1. update demo"
-  - "2. "
+  - Line 1: "1. update demo"
+  - Line 2: "2. " (incomplete, appears to be a placeholder)
 
 ### 2. collatz_conjecture.py
 - **Type:** Python script
@@ -93,7 +93,7 @@ github-tools-demo/
 - **⚠️ SECURITY WARNING:** Contains command injection vulnerability
   - Uses `os.system()` with unsanitized user input
   - Vulnerable to shell command injection
-  - Line 6: `os.system("ls " + user_input)`
+  - Code: `os.system("ls " + user_input)` - concatenates user input directly into shell command
 - **Purpose:** Appears to be for testing security scanning tools
 - **Status:** Intentional vulnerability for demonstration
 - **Recommendation:** Should never be used in production; only for security tool testing
@@ -115,11 +115,12 @@ github-tools-demo/
 
 ## Git History
 
-**Current Branch:** copilot/research-repo-contents
+**Note:** At the time of this research, the repository is being worked on in a feature branch.
 
-**Recent Commits:**
-1. `8a28829` - Initial plan
-2. `34ac02c` - Add test Python file with known command injection vulnerability for security tool testing
+**Repository Activity:**
+- Recent work includes initial planning and setup
+- Added intentional security vulnerability file for testing security scanning tools
+- Active development on repository documentation and tooling
 
 ---
 
