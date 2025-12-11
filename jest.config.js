@@ -1,8 +1,7 @@
 module.exports = {
   testEnvironment: 'jsdom',
   coveragePathIgnorePatterns: [
-    '/node_modules/',
-    'vulnerable_example.py'
+    '/node_modules/'
   ],
   testMatch: [
     '**/__tests__/**/*.js',
@@ -13,7 +12,8 @@ module.exports = {
   collectCoverageFrom: [
     '*.js',
     '*.jsx',
-    '!jest.config.js'
+    '!jest.config.js',
+    '!jest.setup.js'
   ],
   transform: {
     '^.+\\.(js|jsx)$': ['babel-jest', { 

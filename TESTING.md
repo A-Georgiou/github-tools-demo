@@ -60,7 +60,7 @@ pytest
 pytest -v
 
 # Run with coverage report
-pytest --cov=. --cov-report=html
+pytest --cov=collatz_conjecture --cov=vulnerable_example --cov-report=html
 
 # Run specific test file
 pytest test_collatz_conjecture.py

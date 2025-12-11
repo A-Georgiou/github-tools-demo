@@ -1,5 +1,14 @@
 """
 Tests for collatz_conjecture.py
+
+The Collatz conjecture (3n+1 problem) states that for any positive integer n,
+the sequence defined by repeatedly applying:
+- n -> n/2 (if n is even)
+- n -> 3n+1 (if n is odd)
+will always eventually reach 1.
+
+These tests verify the correctness of the collatz_sequence function for various
+inputs, edge cases, and error conditions.
 """
 
 import pytest
