@@ -7,46 +7,7 @@
  * - Edge cases and error handling
  */
 
-// Import the functions we want to test
-// Since process.js doesn't export, we'll need to modify it slightly
-// For now, we'll define test versions of the functions
-
-const fs = require('fs');
-
-// Helper function to extract functions for testing
-function extractFunctions() {
-  // These are the same functions from process.js
-  function processData(items) {
-    const total = items.reduce((sum, item) => sum + item.value, 0);
-    const average = total / items.length;
-    const sorted = [...items].sort((a, b) => b.value - a.value);
-    
-    return {
-      total,
-      average,
-      highest: sorted[0],
-      lowest: sorted[sorted.length - 1]
-    };
-  }
-
-  function generateReport(rawData, stats) {
-    return `# Data Processing Report
-
-## Raw Data
-${rawData.map(item => `- ${item.name}: ${item.value}`).join('\n')}
-
-## Statistics
-- Total: ${stats.total}
-- Average: ${stats.average.toFixed(2)}
-- Highest: ${stats.highest.name} (${stats.highest.value})
-- Lowest: ${stats.lowest.name} (${stats.lowest.value})
-`;
-  }
-
-  return { processData, generateReport };
-}
-
-const { processData, generateReport } = extractFunctions();
+const { processData, generateReport } = require('./process');
 
 // Test suite for processData function
 describe('processData', () => {

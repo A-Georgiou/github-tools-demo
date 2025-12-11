@@ -46,11 +46,13 @@ ${rawData.map(item => `- ${item.name}: ${item.value}`).join('\n')}
 }
 
 // Main process
-const stats = processData(data);
-const report = generateReport(data, stats);
-
-// In a real script, we would write this to a file
-console.log(report);
+if (require.main === module) {
+  const stats = processData(data);
+  const report = generateReport(data, stats);
+  
+  // In a real script, we would write this to a file
+  console.log(report);
+}
 
 // Example of how this could be used in a GitHub Action:
 /*
@@ -58,3 +60,9 @@ console.log(report);
     fs.writeFileSync('report.md', report);
   }
 */
+
+// Export functions for testing
+module.exports = {
+  processData,
+  generateReport
+};
