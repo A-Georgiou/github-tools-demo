@@ -1,0 +1,16 @@
+{
+  "name": "github-tools-demo",
+  "version": "1.0.0",
+  "description": "Demo repository with various code examples",
+  "main": "process.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "keywords": ["demo", "github", "testing"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
