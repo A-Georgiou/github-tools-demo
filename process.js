@@ -45,16 +45,21 @@ ${rawData.map(item => `- ${item.name}: ${item.value}`).join('\n')}
 `;
 }
 
-// Main process
-const stats = processData(data);
-const report = generateReport(data, stats);
+// Main process - only run when file is executed directly
+if (require.main === module) {
+  const stats = processData(data);
+  const report = generateReport(data, stats);
+  
+  // In a real script, we would write this to a file
+  console.log(report);
+  
+  // Example of how this could be used in a GitHub Action:
+  /*
+    if (process.env.GITHUB_ACTIONS) {
+      fs.writeFileSync('report.md', report);
+    }
+  */
+}
 
-// In a real script, we would write this to a file
-console.log(report);
-
-// Example of how this could be used in a GitHub Action:
-/*
-  if (process.env.GITHUB_ACTIONS) {
-    fs.writeFileSync('report.md', report);
-  }
-*/
+// Export functions for testing
+module.exports = { processData, generateReport };
