@@ -58,3 +58,9 @@ console.log(report);
     fs.writeFileSync('report.md', report);
   }
 */
+
+// Export functions for testing
+module.exports = {
+  processData,
+  generateReport
+};

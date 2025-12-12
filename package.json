@@ -1,0 +1,17 @@
+{
+  "name": "github-tools-demo",
+  "version": "1.0.0",
+  "description": "update demo",
+  "main": "process.js",
+  "scripts": {
+    "test": "npm run test:js && npm run test:py",
+    "test:js": "jest",
+    "test:py": "pytest -v"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}
