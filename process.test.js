@@ -58,8 +58,8 @@ describe('processData', () => {
     const data = [];
     const result = processData(data);
     expect(result.total).toBe(0);
-    // Division by zero results in NaN or Infinity
-    expect(isNaN(result.average) || !isFinite(result.average)).toBe(true);
+    // Division by zero (0/0) results in NaN
+    expect(result.average).toBeNaN();
     expect(result.highest).toBeUndefined();
     expect(result.lowest).toBeUndefined();
   });

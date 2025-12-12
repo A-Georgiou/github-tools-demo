@@ -42,7 +42,9 @@ class TestCollatzSequence:
     def test_sequence_starting_from_27(self):
         """Test a longer sequence starting from 27"""
         result = collatz_sequence(27)
-        # The sequence for 27 has exactly 112 steps
+        # The sequence for 27 has exactly 112 steps - this is one of the
+        # longest sequences below 100 and demonstrates the unpredictable
+        # behavior of the Collatz conjecture
         assert result[0] == 27
         assert result[-1] == 1
         assert len(result) == 112
