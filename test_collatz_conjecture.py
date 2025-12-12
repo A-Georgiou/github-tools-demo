@@ -42,10 +42,10 @@ class TestCollatzSequence:
     def test_sequence_starting_from_27(self):
         """Test a longer sequence starting from 27"""
         result = collatz_sequence(27)
-        # The sequence for 27 is quite long, just verify it starts and ends correctly
+        # The sequence for 27 has exactly 112 steps
         assert result[0] == 27
         assert result[-1] == 1
-        assert len(result) > 10  # 27 has a notably long sequence
+        assert len(result) == 112
 
     def test_invalid_input_zero(self):
         """Test that zero raises ValueError"""

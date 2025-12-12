@@ -2,33 +2,7 @@
  * Tests for process.js
  */
 
-// Mock the process.js module functions for testing
-const processData = (items) => {
-  const total = items.reduce((sum, item) => sum + item.value, 0);
-  const average = total / items.length;
-  const sorted = [...items].sort((a, b) => b.value - a.value);
-  
-  return {
-    total,
-    average,
-    highest: sorted[0],
-    lowest: sorted[sorted.length - 1]
-  };
-};
-
-const generateReport = (rawData, stats) => {
-  return `# Data Processing Report
-
-## Raw Data
-${rawData.map(item => `- ${item.name}: ${item.value}`).join('\n')}
-
-## Statistics
-- Total: ${stats.total}
-- Average: ${stats.average.toFixed(2)}
-- Highest: ${stats.highest.name} (${stats.highest.value})
-- Lowest: ${stats.lowest.name} (${stats.lowest.value})
-`;
-};
+const { processData, generateReport } = require('./process');
 
 describe('processData', () => {
   test('calculates total correctly', () => {
@@ -78,6 +52,16 @@ describe('processData', () => {
     expect(result.average).toBe(100);
     expect(result.highest).toEqual({ name: 'Only Item', value: 100 });
     expect(result.lowest).toEqual({ name: 'Only Item', value: 100 });
+  });
+
+  test('handles empty array edge case', () => {
+    const data = [];
+    const result = processData(data);
+    expect(result.total).toBe(0);
+    // Division by zero results in NaN or Infinity
+    expect(isNaN(result.average) || !isFinite(result.average)).toBe(true);
+    expect(result.highest).toBeUndefined();
+    expect(result.lowest).toBeUndefined();
   });
 });
 
