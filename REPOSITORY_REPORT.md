@@ -203,9 +203,9 @@ Executes: ls file.txt; rm -rf /
 ```
 
 **Mitigation (if this were production code):**
-- Use `subprocess.run()` with argument list instead of shell=True
+- Use `subprocess.run()` with an argument list instead of shell=True
 - Implement input validation and sanitization
-- Use allowlists for acceptable inputs
+- Use allow lists for acceptable inputs
 
 **Current Status:** This vulnerability is **intentional** for testing security scanning tools like CodeQL. The repository description and commit messages indicate this is by design.
 
