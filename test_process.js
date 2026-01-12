@@ -9,7 +9,8 @@ const assert = require('assert');
 
 // Import functions from process.js
 // Since process.js doesn't export functions, we'll need to copy them here
-// In a real scenario, we'd refactor process.js to export the functions
+// In a real scenario, we'd refactor process.js to export the functions using module.exports
+// Note: These functions assume non-empty arrays as input, matching the original implementation
 
 // Copied functions from process.js for testing
 function processData(items) {
