@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Chess</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom right, #4a5568, #2d3748);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .app-wrapper {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 1100px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 2.8em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-layout {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .board-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(8, 65px);
+            grid-template-rows: repeat(8, 65px);
+            border: 4px solid #2d3748;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cell {
+            width: 65px;
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            user-select: none;
+        }
+
+        .cell.bright {
+            background-color: #eee8d5;
+        }
+
+        .cell.shaded {
+            background-color: #93a1a1;
+        }
+
+        .cell.active {
+            background-color: #85c1e2 !important;
+            transform: scale(0.95);
+        }
+
+        .cell.possible {
+            background-color: #b8d4c8 !important;
+            position: relative;
+        }
+
+        .cell.possible::before {
+            content: '•';
+            font-size: 28px;
+            color: rgba(0, 0, 0, 0.4);
+            position: absolute;
+        }
+
+        .cell:hover {
+            filter: brightness(0.9);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .action-btn {
+            background: linear-gradient(to right, #4a5568, #2d3748);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .info-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 280px;
+        }
+
+        .info-card {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .info-card h3 {
+            margin-bottom: 12px;
+            color: #2d3748;
+            font-size: 1.3em;
+            border-bottom: 2px solid #4a5568;
+            padding-bottom: 8px;
+        }
+
+        .player-turn {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4a5568;
+            text-align: center;
+            padding: 10px;
+            background: linear-gradient(to right, #edf2f7, #e2e8f0);
+            border-radius: 8px;
+        }
+
+        .taken-pieces {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            font-size: 26px;
+            min-height: 30px;
+        }
+
+        .history-panel {
+            max-height: 220px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .history-item {
+            padding: 6px;
+            margin-bottom: 4px;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #4a5568;
+        }
+
+        .end-game-banner {
+            text-align: center;
+            padding: 18px;
+            background: linear-gradient(to right, #fc8181, #f56565);
+            color: white;
+            border-radius: 10px;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .end-game-banner.visible {
+            display: block;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #edf2f7;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-wrapper">
+        <h1>♚ Interactive Chess ♔</h1>
+        
+        <div class="end-game-banner" id="endBanner"></div>
+        
+        <div class="main-layout">
+            <div class="board-section">
+                <div class="game-board" id="gameBoard"></div>
+                <div class="button-group">
+                    <button class="action-btn" onclick="startNewGame()">Restart Game</button>
+                    <button class="action-btn" onclick="revertLastMove()">Take Back</button>
+                </div>
+            </div>
+            
+            <div class="info-sidebar">
+                <div class="info-card">
+                    <h3>Current Turn</h3>
+                    <div class="player-turn" id="playerTurn">White Player</div>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Captured</h3>
+                    <div class="taken-pieces" id="whiteTaken"></div>
+                    <hr style="margin: 10px 0; border: 1px solid #e2e8f0;">
+                    <div class="taken-pieces" id="blackTaken"></div>
+                </div>
+                
+                <div class="info-card">
+                    <h3>Move Log</h3>
+                    <div class="history-panel" id="moveLog"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const unicodePieces = {
+            'K': '♔', 'Q': '♕', 'R': '♖', 'B': '♗', 'N': '♘', 'P': '♙',
+            'k': '♚', 'q': '♛', 'r': '♜', 'b': '♝', 'n': '♞', 'p': '♟'
+        };
+
+        const startingPosition = [
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['', '', '', '', '', '', '', ''],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+        ];
+
+        let gameState = {
+            board: null,
+            activeCell: null,
+            turnColor: 'white',
+            moveLog: [],
+            whiteCaptured: [],
+            blackCaptured: [],
+            isFinished: false
+        };
+
+        function startNewGame() {
+            gameState = {
+                board: JSON.parse(JSON.stringify(startingPosition)),
+                activeCell: null,
+                turnColor: 'white',
+                moveLog: [],
+                whiteCaptured: [],
+                blackCaptured: [],
+                isFinished: false
+            };
+            document.getElementById('endBanner').classList.remove('visible');
+            renderBoard();
+        }
+
+        function renderBoard() {
+            const boardElement = document.getElementById('gameBoard');
+            boardElement.innerHTML = '';
+            
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    const cell = document.createElement('div');
+                    const colorClass = (r + c) % 2 === 0 ? 'bright' : 'shaded';
+                    cell.className = `cell ${colorClass}`;
+                    cell.dataset.r = r;
+                    cell.dataset.c = c;
+                    cell.onclick = () => onCellClick(r, c);
+                    
+                    const piece = gameState.board[r][c];
+                    if (piece) {
+                        cell.textContent = unicodePieces[piece];
+                    }
+                    
+                    boardElement.appendChild(cell);
+                }
+            }
+            
+            refreshDisplay();
+        }
+
+        function onCellClick(r, c) {
+            if (gameState.isFinished) return;
+            
+            if (gameState.activeCell === null) {
+                const piece = gameState.board[r][c];
+                if (piece && belongsToCurrentPlayer(piece)) {
+                    gameState.activeCell = { r, c };
+                    markCell(r, c, 'active');
+                    showPossibleMoves(r, c);
+                }
+            } else {
+                const { r: fromR, c: fromC } = gameState.activeCell;
+                
+                if (fromR === r && fromC === c) {
+                    removeHighlights();
+                    gameState.activeCell = null;
+                } else if (canMoveTo(fromR, fromC, r, c)) {
+                    executeMove(fromR, fromC, r, c);
+                    removeHighlights();
+                    gameState.activeCell = null;
+                } else {
+                    removeHighlights();
+                    gameState.activeCell = null;
+                    onCellClick(r, c);
+                }
+            }
+        }
+
+        // Check if a piece belongs to the current player
+        // Convention: White pieces are uppercase (K, Q, R, etc.), black pieces are lowercase (k, q, r, etc.)
+        function belongsToCurrentPlayer(piece) {
+            return gameState.turnColor === 'white' ? piece === piece.toUpperCase() : piece === piece.toLowerCase();
+        }
+
+        function canMoveTo(fromR, fromC, toR, toC) {
+            const moves = calculateMoves(fromR, fromC);
+            return moves.some(m => m.r === toR && m.c === toC);
+        }
+
+        function calculateMoves(r, c) {
+            const piece = gameState.board[r][c];
+            if (!piece) return [];
+            
+            const type = piece.toLowerCase();
+            let possibleMoves = [];
+            
+            if (type === 'p') {
+                possibleMoves = pawnMoveOptions(r, c, piece);
+            } else if (type === 'r') {
+                possibleMoves = slidingMoves(r, c, [[0,1],[0,-1],[1,0],[-1,0]]);
+            } else if (type === 'n') {
+                possibleMoves = knightJumps(r, c);
+            } else if (type === 'b') {
+                possibleMoves = slidingMoves(r, c, [[1,1],[1,-1],[-1,1],[-1,-1]]);
+            } else if (type === 'q') {
+                possibleMoves = slidingMoves(r, c, [[0,1],[0,-1],[1,0],[-1,0],[1,1],[1,-1],[-1,1],[-1,-1]]);
+            } else if (type === 'k') {
+                possibleMoves = adjacentMoves(r, c);
+            }
+            
+            return possibleMoves;
+        }
+
+        function pawnMoveOptions(r, c, piece) {
+            const moves = [];
+            const dir = piece === piece.toUpperCase() ? -1 : 1;
+            const homeRow = piece === piece.toUpperCase() ? 6 : 1;
+            
+            if (isValidPosition(r + dir, c) && !gameState.board[r + dir][c]) {
+                moves.push({ r: r + dir, c });
+                
+                if (r === homeRow && !gameState.board[r + 2 * dir][c]) {
+                    moves.push({ r: r + 2 * dir, c });
+                }
+            }
+            
+            for (let dc of [-1, 1]) {
+                const nr = r + dir;
+                const nc = c + dc;
+                if (isValidPosition(nr, nc)) {
+                    const target = gameState.board[nr][nc];
+                    if (target && !belongsToCurrentPlayer(target)) {
+                        moves.push({ r: nr, c: nc });
+                    }
+                }
+            }
+            
+            return moves;
+        }
+
+        function slidingMoves(r, c, directions) {
+            const moves = [];
+            
+            for (let [dr, dc] of directions) {
+                for (let step = 1; step < 8; step++) {
+                    const nr = r + dr * step;
+                    const nc = c + dc * step;
+                    
+                    if (!isValidPosition(nr, nc)) break;
+                    
+                    const target = gameState.board[nr][nc];
+                    if (!target) {
+                        moves.push({ r: nr, c: nc });
+                    } else {
+                        if (!belongsToCurrentPlayer(target)) {
+                            moves.push({ r: nr, c: nc });
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            return moves;
+        }
+
+        function knightJumps(r, c) {
+            const moves = [];
+            const jumps = [
+                [-2,-1], [-2,1], [-1,-2], [-1,2],
+                [1,-2], [1,2], [2,-1], [2,1]
+            ];
+            
+            for (let [dr, dc] of jumps) {
+                const nr = r + dr;
+                const nc = c + dc;
+                
+                if (isValidPosition(nr, nc)) {
+                    const target = gameState.board[nr][nc];
+                    if (!target || !belongsToCurrentPlayer(target)) {
+                        moves.push({ r: nr, c: nc });
+                    }
+                }
+            }
+            
+            return moves;
+        }
+
+        function adjacentMoves(r, c) {
+            const moves = [];
+            const dirs = [
+                [0,1], [0,-1], [1,0], [-1,0],
+                [1,1], [1,-1], [-1,1], [-1,-1]
+            ];
+            
+            for (let [dr, dc] of dirs) {
+                const nr = r + dr;
+                const nc = c + dc;
+                
+                if (isValidPosition(nr, nc)) {
+                    const target = gameState.board[nr][nc];
+                    if (!target || !belongsToCurrentPlayer(target)) {
+                        moves.push({ r: nr, c: nc });
+                    }
+                }
+            }
+            
+            return moves;
+        }
+
+        function isValidPosition(r, c) {
+            return r >= 0 && r < 8 && c >= 0 && c < 8;
+        }
+
+        function executeMove(fromR, fromC, toR, toC) {
+            const piece = gameState.board[fromR][fromC];
+            const captured = gameState.board[toR][toC];
+            
+            gameState.moveLog.push({
+                fromPos: { r: fromR, c: fromC },
+                toPos: { r: toR, c: toC },
+                movedPiece: piece,
+                capturedPiece: captured,
+                player: gameState.turnColor
+            });
+            
+            if (captured) {
+                if (gameState.turnColor === 'white') {
+                    gameState.blackCaptured.push(captured);
+                } else {
+                    gameState.whiteCaptured.push(captured);
+                }
+                
+                // Simplified chess rules: Game ends when king is captured
+                // Note: In standard chess, the game would end in checkmate before the king is actually taken
+                // This simplified approach is used for basic gameplay
+                if (captured.toLowerCase() === 'k') {
+                    gameState.isFinished = true;
+                    displayEndMessage(`${gameState.turnColor === 'white' ? 'White' : 'Black'} is Victorious!`);
+                }
+            }
+            
+            gameState.board[toR][toC] = piece;
+            gameState.board[fromR][fromC] = '';
+            gameState.turnColor = gameState.turnColor === 'white' ? 'black' : 'white';
+            
+            renderBoard();
+        }
+
+        function revertLastMove() {
+            if (gameState.moveLog.length === 0) return;
+            
+            const last = gameState.moveLog.pop();
+            
+            gameState.board[last.fromPos.r][last.fromPos.c] = last.movedPiece;
+            gameState.board[last.toPos.r][last.toPos.c] = last.capturedPiece || '';
+            
+            if (last.capturedPiece) {
+                if (last.player === 'white') {
+                    gameState.blackCaptured.pop();
+                } else {
+                    gameState.whiteCaptured.pop();
+                }
+            }
+            
+            gameState.turnColor = last.player;
+            gameState.isFinished = false;
+            
+            removeHighlights();
+            gameState.activeCell = null;
+            renderBoard();
+        }
+
+        function markCell(r, c, cssClass) {
+            const cells = document.querySelectorAll('.cell');
+            const idx = r * 8 + c;
+            cells[idx].classList.add(cssClass);
+        }
+
+        function showPossibleMoves(r, c) {
+            const moves = calculateMoves(r, c);
+            moves.forEach(move => markCell(move.r, move.c, 'possible'));
+        }
+
+        function removeHighlights() {
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.classList.remove('active', 'possible');
+            });
+        }
+
+        function refreshDisplay() {
+            const turnDisplay = document.getElementById('playerTurn');
+            turnDisplay.textContent = `${gameState.turnColor === 'white' ? 'White' : 'Black'} Player`;
+            turnDisplay.style.color = gameState.turnColor === 'white' ? '#2d3748' : '#5a67d8';
+            
+            document.getElementById('whiteTaken').innerHTML = 
+                gameState.whiteCaptured.map(p => unicodePieces[p]).join(' ');
+            document.getElementById('blackTaken').innerHTML = 
+                gameState.blackCaptured.map(p => unicodePieces[p]).join(' ');
+            
+            const logPanel = document.getElementById('moveLog');
+            logPanel.innerHTML = gameState.moveLog.map((move, idx) => {
+                const fromNotation = toChessNotation(move.fromPos);
+                const toNotation = toChessNotation(move.toPos);
+                return `<div class="history-item">${idx + 1}. ${unicodePieces[move.movedPiece]} ${fromNotation} → ${toNotation}</div>`;
+            }).join('');
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+
+        function toChessNotation(pos) {
+            // Convert board position to chess notation (e.g., row=6, col=4 -> "e2")
+            // ASCII code 97 is 'a', so col 0 becomes 'a', col 1 becomes 'b', etc.
+            const file = String.fromCharCode(97 + pos.c);
+            const rank = 8 - pos.r;
+            return file + rank;
+        }
+
+        function displayEndMessage(msg) {
+            const banner = document.getElementById('endBanner');
+            banner.textContent = msg;
+            banner.classList.add('visible');
+        }
+
+        startNewGame();
+    </script>
+</body>
+</html>
