@@ -339,6 +339,8 @@
             }
         }
 
+        // Check if a piece belongs to the current player
+        // Convention: White pieces are uppercase (K, Q, R, etc.), black pieces are lowercase (k, q, r, etc.)
         function belongsToCurrentPlayer(piece) {
             return gameState.turnColor === 'white' ? piece === piece.toUpperCase() : piece === piece.toLowerCase();
         }
@@ -491,6 +493,9 @@
                     gameState.whiteCaptured.push(captured);
                 }
                 
+                // Simplified chess rules: Game ends when king is captured
+                // Note: In standard chess, the game would end in checkmate before the king is actually taken
+                // This simplified approach is used for basic gameplay
                 if (captured.toLowerCase() === 'k') {
                     gameState.isFinished = true;
                     displayEndMessage(`${gameState.turnColor === 'white' ? 'White' : 'Black'} is Victorious!`);
@@ -566,6 +571,8 @@
         }
 
         function toChessNotation(pos) {
+            // Convert board position to chess notation (e.g., row=6, col=4 -> "e2")
+            // ASCII code 97 is 'a', so col 0 becomes 'a', col 1 becomes 'b', etc.
             const file = String.fromCharCode(97 + pos.c);
             const rank = 8 - pos.r;
             return file + rank;
