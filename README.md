@@ -16,7 +16,7 @@ github-tools-demo/
 ├── chart.html                  # Vanilla HTML/CSS/JS interactive chart
 ├── animation.svg               # SVG animation demo
 ├── issues/                     # Issue tracking and documentation
-│   └── 2_summary.md           # Conversation summary for issue #2
+│   └── 2_summary.md           # Conversation summary for issue #2 (pattern: {number}_summary.md)
 └── README.md                   # This file
 ```
 
@@ -145,9 +145,9 @@ open animation.svg
 ## Security Considerations
 
 ⚠️ **Warning**: This repository contains intentionally vulnerable code for testing security tools. Never use `vulnerable_example.py` patterns in production code:
-- Command injection vulnerability in `os.system()`
-- Unsanitized user input
-- Improper use of shell commands
+- Command injection vulnerability: unsanitized user input passed directly to `os.system()` enables arbitrary command execution
+- Example: `os.system("ls " + user_input)` allows attackers to inject commands like `; rm -rf /`
+- Always use parameterized commands or input validation/sanitization in production code
 
 ## Contributing
 
