@@ -16,7 +16,7 @@ github-tools-demo/
 ├── chart.html                  # Vanilla HTML/CSS/JS interactive chart
 ├── animation.svg               # SVG animation demo
 ├── issues/                     # Issue tracking and documentation
-│   └── 2_summary.md           # Conversation summary for issue #2 (pattern: {number}_summary.md)
+│   └── 2_summary.md           # Conversation summary (pattern: {issue_number}_summary.md)
 └── README.md                   # This file
 ```
 
