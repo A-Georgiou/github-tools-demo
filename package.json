@@ -1,0 +1,25 @@
+{
+  "name": "github-tools-demo",
+  "version": "1.0.0",
+  "description": "update demo",
+  "main": "process.js",
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/A-Georgiou/github-tools-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/A-Georgiou/github-tools-demo/issues"
+  },
+  "homepage": "https://github.com/A-Georgiou/github-tools-demo#readme",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}
